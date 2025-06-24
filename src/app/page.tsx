@@ -5,8 +5,11 @@ import { useEffect } from "react";
 export default function Home() {
   useEffect(()=>{
     const fetchTest=async()=>{
+      const apiUrl = process.env.NODE_ENV === 'production' 
+        ? '/api/test'
+        : 'http://localhost:4000/test';
       try{
-        const response = await fetch("http://localhost:4000/test",{method:"get",headers: {
+        const response = await fetch(apiUrl,{method:"get",headers: {
             'Content-Type': 'application/json',
           }})
         const data =await response.json()

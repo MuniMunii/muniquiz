@@ -5,7 +5,7 @@ const cors = require("cors");
 const app = express();
 app.use(
   cors({
-    origin:['http://localhost:3000',"https://muniquiz.vercel.app"],
+    origin:['http://localhost:3000',"https://muniquiz-v2.vercel.app"],
      credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
@@ -19,5 +19,7 @@ app.get("/test", async (_req: Request, res: Response) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-app.listen(4000,()=>console.log('test server started on port 4000'))
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(4000, () => console.log('Local dev server on port 4000'));
+}
 module.exports=app
