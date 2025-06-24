@@ -9,7 +9,7 @@ export default function Home() {
         ? '/api/test'
         : 'http://localhost:4000/test';
       try{
-        const response = await fetch(apiUrl,{method:"get",headers: {
+        const response = await fetch("/api/test",{method:"get",headers: {
             'Content-Type': 'application/json',
           }})
         const data =await response.json()
