@@ -11,7 +11,7 @@ export default function Home() {
           }})
         const data =await response.json()
         console.log(data) 
-      }catch(error){console.log('cannot fetch data')}
+      }catch(error){console.log('cannot fetch data',error)}
     }
     fetchTest()
   },[])
