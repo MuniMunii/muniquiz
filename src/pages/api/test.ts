@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { allowCors } from '../lib/allowCors';
 
-async function handler(req: VercelRequest, res: VercelResponse) {
+async function handler(_req: VercelRequest, res: VercelResponse) {
     try{
         console.log("test")
         res.status(200).json({ message: "Test endpoint is working!" });
