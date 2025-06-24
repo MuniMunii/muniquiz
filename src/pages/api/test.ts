@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { allowCors } from '../lib/allowCors';
+import { allowCors } from '../../../lib/allowCors';
 
 async function handler(_req: VercelRequest, res: VercelResponse) {
     try{
