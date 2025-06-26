@@ -2,6 +2,8 @@ import {MongoClient} from 'mongodb'
 const uri= process.env.MONGODB_URI!
 const options={}
 let client: MongoClient
+/* eslint-disable prefer-const */
+// test
 let clientPromise: Promise<MongoClient>;
 declare global {
     var _mongoClientPromise: Promise<MongoClient>;

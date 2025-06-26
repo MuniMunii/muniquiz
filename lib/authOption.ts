@@ -3,6 +3,7 @@ import GoogleProvider from "next-auth/providers/google"
 // authoption ini untuk mengatur opsi autentikasi dan dipanggil jika dibutuhkan / digunakan
 // component yang membutuhkan autentikasi/role
 // pake useSession untuk client dan getServerSession untuk server
+/* eslint-disable @typescript-eslint/no-unused-vars */
 export const authOptions:AuthOptions= {
   providers: [
     GoogleProvider({

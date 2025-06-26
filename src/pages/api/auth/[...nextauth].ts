@@ -2,6 +2,7 @@ import NextAuth from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 import type { NextAuthOptions } from "next-auth"
 // authoption ini untuk initialisasi authentikasi
+/* eslint-disable @typescript-eslint/no-unused-vars */
 export const authOptions: NextAuthOptions = {
   debug: true,
   secret: process.env.NEXTAUTH_SECRET,
