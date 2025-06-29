@@ -6,7 +6,6 @@ import type { NextAuthOptions } from "next-auth"
 export const authOptions: NextAuthOptions = {
   debug: true,
   secret: process.env.NEXTAUTH_SECRET,
-  useSecureCookies: false,
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -20,27 +19,6 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/auth/signin",
     signOut: "/auth/signout"
-  },
-  cookies: {
-    pkceCodeVerifier: {
-      name: "next-auth.pkce.code_verifier",
-      options: {
-        httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-        secure: process.env.NODE_ENV === "production",
-      }
-    },
-    state: {
-      name: "next-auth.state",
-      options: {
-        httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-        secure: process.env.NODE_ENV === "production",
-        maxAge: 60 * 15
-      }
-    }
   },
   callbacks: {
     async session({ session, token:_token }) {

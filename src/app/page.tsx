@@ -16,7 +16,7 @@ export default function Home() {
     fetchTest()
   },[])
   const {data:session,status}=useSession()
-  useEffect(()=>{console.log(`is Login?: ${session}, status: ${status}`)},[session])
+  useEffect(()=>{console.log(`is Login?:`, `status: ${status}`);console.log(session)},[session])
   return (
     <div className="size-full bg-amber-400 flex gap-4">
       <Link href={'/auth/signin'}>Sign In</Link>
