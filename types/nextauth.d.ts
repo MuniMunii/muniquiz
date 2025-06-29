@@ -8,6 +8,7 @@ declare module "next-auth" {
     someCookie?: string;
     user: {
       address: string
+      role?:string
     } & DefaultSession["user"]
   }
 }

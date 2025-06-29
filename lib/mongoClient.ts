@@ -1,5 +1,8 @@
 import {MongoClient} from 'mongodb'
 const uri= process.env.MONGODB_URI!
+if (!process.env.MONGODB_URI) {
+  throw new Error('Invalid/Missing environment variable: "MONGODB_URI"')
+}
 const options={}
 let client: MongoClient
 /* eslint-disable prefer-const */
