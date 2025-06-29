@@ -6,10 +6,10 @@ import { Session } from "next-auth";
 
 export default function SessionWrapper({
   children,
-  session,
+  // session,
 }: {
   children: ReactNode;
-  session: Session | null;
+  // session: Session | null;
 }) {
-  return <SessionProvider session={session}>{children}</SessionProvider>;
+  return <SessionProvider>{children}</SessionProvider>;
 }
