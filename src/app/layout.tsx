@@ -24,16 +24,13 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>){
-  const session=await getServerSession(authOptions)
-  if(!session){
-    throw new Error("Session not found/not authenticated");
-  }
+  // const session=await getServerSession(authOptions)
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <SessionWrapper session={session}>
+        <SessionWrapper session={null}>
         {children}
         </SessionWrapper>
       </body>
