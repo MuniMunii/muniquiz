@@ -8,7 +8,7 @@ interface FormState{
     password:string;
     confirmPassword:string;
 }
-export default function Form() {
+export default function SignUpForm() {
   const [formState, setFormState] = useState<FormState>({
     username: "",
     email: "",
@@ -50,7 +50,6 @@ export default function Form() {
         type="password"
       />
       <GoogleSignInButton redirectUrl="/auth/signin" />
-      <Link href={"/auth/signin"}>Click Here to Login</Link>
     </form>
   );
 }
