@@ -10,6 +10,7 @@ interface FormState {
   password: string;
   confirmPassword: string;
 }
+
 export default function SignUpForm() {
   const [formState, setFormState] = useState<FormState>({
     username: "",
@@ -17,21 +18,39 @@ export default function SignUpForm() {
     password: "",
     confirmPassword: "",
   });
+  // state for handle validation UI
+  const [validation, setValidation] = useState<
+    Record<keyof FormState, boolean>
+  >({
+    username: false,
+    email: false,
+    password: false,
+    confirmPassword: false,
+  });
   const [error, setError] = useState({ message: "", show: false });
   const [success, setSuccess] = useState({ message: "", show: false });
   const router = useRouter();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (formState.password !== formState.confirmPassword)
-      return setError((e) => ({
-        show: true,
-        message: "Password do not match",
-      }));
-    if (!formState.username || !formState.email || !formState.password)
-      return setError((e) => ({
-        show: true,
-        message: "All fields are required",
-      }));
+    const passwordIsMatch = formState.password === formState.confirmPassword;
+    // state for handle validation
+    const newValidation: Record<keyof FormState, boolean> = {
+      username: !formState.username,
+      email: !formState.email,
+      password: !formState.password,
+      confirmPassword: !passwordIsMatch,
+    };
+    // Update UI validation state
+    setValidation(newValidation);
+    const hasError = Object.values(newValidation).some((v) => v);
+    if (hasError) {
+      const message = !passwordIsMatch
+        ? "Passwords do not match"
+        : "All fields are required";
+      setValidation(newValidation);
+      setError({ show: true, message });
+      return;
+    }
     try {
       const response = await fetch("/api/account/add-account", {
         method: "POST",
@@ -48,6 +67,7 @@ export default function SignUpForm() {
         }));
       }
       if (data.status) {
+        // Redirect to signin
         setTimeout(() => {
           router.push("/auth/signin");
         }, 4000);
@@ -69,12 +89,13 @@ export default function SignUpForm() {
       }));
     }
   };
+  // useEffect reset animation notifications
   useEffect(() => {
     let timer: NodeJS.Timeout;
     timer = setTimeout(() => {
-      setError((e) => ({ ...e, show: false }));
-      setSuccess((e) => ({ ...e, show: false }));
-    }, 5000);
+      setError((e) => ({ message: "", show: false }));
+      setSuccess((e) => ({ message: "", show: false }));
+    }, 4000);
     return () => {
       clearTimeout(timer);
     };
@@ -92,7 +113,7 @@ export default function SignUpForm() {
           console.log("submit", error || success);
           handleSubmit(e);
         }}
-        className="h-96 w-5/6 max-w-[600px] border border-black bg-black flex justify-center items-center flex-col gap-4"
+        className="h-96 border border-black bg-black flex justify-center items-center flex-col gap-4"
       >
         <input
           onChange={(e) =>

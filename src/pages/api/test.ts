@@ -7,7 +7,6 @@ async function handler(_req: VercelRequest, res: VercelResponse) {
         const db =client.db("sample_mflix")
         const posts=db.collection("movies")
         const getMovies=await posts.find().limit(2).toArray()
-        console.log("test",getMovies)
         res.status(200).json({ message: "Test endpoint is working!" ,Movie:getMovies});
     }
     catch(error){

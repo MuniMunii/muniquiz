@@ -3,13 +3,57 @@ import GoogleProvider from "next-auth/providers/google";
 import type { NextAuthOptions } from "next-auth";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import clientPromise from "../../../../lib/mongoClient";
-import { UserSchema } from "../../../../lib/validation/user";
+import CredentialsProvider from "next-auth/providers/credentials";
 // authoption ini untuk initialisasi authentikasi
 /* eslint-disable @typescript-eslint/no-unused-vars */
 export const authOptions: NextAuthOptions = {
   debug: true,
   secret: process.env.NEXTAUTH_SECRET,
+  session: { strategy: "jwt" },
   providers: [
+    CredentialsProvider({
+      name: "Credentials",
+      credentials: {
+        username: { label: "Username", type: "text", placeholder: "Jhon" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials, _req) {
+        console.log("Authorizing with credentials:", credentials);
+        const { username, password } = credentials ?? {};
+        console.log(
+          "password: ",
+          password,
+          typeof password,
+          "username: ",
+          username,
+          typeof username
+        );
+        if (!username || !password) return null;
+        const res = await fetch(
+          `${
+            process.env.NODE_ENV === "production"
+              ? process.env.NEXTAUTH_URL
+              : "http://localhost:3000"
+          }/api/account/auth-account`,
+          {
+            method: "POST",
+            body: JSON.stringify({ username, password }),
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+        const user = await res.json();
+        console.log(user);
+        if (res.ok && user)
+          return {
+            id: user._id.toString(),
+            email: user.email,
+            name: user.username,
+            image: null,
+            role: user.role,
+          };
+        return null;
+      },
+    }),
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
@@ -19,51 +63,35 @@ export const authOptions: NextAuthOptions = {
       checks: ["none"],
     }),
   ],
-  adapter: MongoDBAdapter(clientPromise,{databaseName:'muniquiz'}),
+  adapter: MongoDBAdapter(clientPromise, { databaseName: "muniquiz" }),
   pages: {
     signIn: "/auth/signin",
     signOut: "/auth/signout",
   },
-  events: {
-    async createUser({ user }) {
-      const db = (await clientPromise).db();
-      const userExist = await db
-        .collection("users")
-        .findOne({ email: user.email });
-      const parseUser = UserSchema.safeParse(userExist);
-      if (!parseUser.data?.role) {
-        await db
-          .collection("users")
-          .updateOne({ email: user.email }, { $set: { role: "user" } });
-      }
-    },
-  },
   callbacks: {
-    async signIn({ user }) {
+ async signIn({ user, account }) {
+    if (account?.provider === "credentials") {
+      // Just verify credentials user exists from signup
       const db = (await clientPromise).db();
-      const collectionUsers = db.collection("users");
-      const userExist = await collectionUsers.findOne({ email: user.email });
-      const parseUser = UserSchema.safeParse(userExist);
-      if (!parseUser.success) {
-        console.log("User Validation Error ", parseUser.error);
-      }
-      const parsedUser = parseUser.data;
-      if (!parsedUser?.role) {
-        await collectionUsers.updateOne(
-          { email: user.email },
-          { $set: { role: "user" } }
-        );
-      }
-      return true;
-    },
-
-    async session({ session, token: _token }) {
+      const userExist = await db.collection("users").findOne({
+        username: user.username,
+        provider:account?.provider
+      });
+      return !!userExist;
+    }
+    return true;
+  },
+    async session({ session, token:_token }) {
       const db = (await clientPromise).db();
+      // Try to find user by email and any provider
       const user = await db
         .collection("users")
         .findOne({ email: session.user.email });
       if (user?.role) {
         session.user.role = user.role;
+      }
+      if (user?._id) {
+        session.user.id = user._id.toString();
       }
       return session;
     },
@@ -74,31 +102,5 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
   },
-  // Debugging
-  // events: {
-  //   async signIn(message) {
-  //     console.log('Sign in event:', message)
-  //   },
-  //   async signOut(message) {
-  //     console.log('Sign out event:', message)
-  //   },
-  //   async createUser(message) {
-  //     console.log('Create user event:', message)
-  //   },
-  //   async session(message) {
-  //     console.log('Session event:', message)
-  //   }
-  // },
-  // logger: {
-  //   error(code, metadata) {
-  //     console.error('NextAuth Error:', code, metadata)
-  //   },
-  //   warn(code) {
-  //     console.warn('NextAuth Warning:', code)
-  //   },
-  //   debug(code, metadata) {
-  //     console.log('NextAuth Debug:', code, metadata)
-  //   }
-  // }
 };
 export default NextAuth(authOptions);
