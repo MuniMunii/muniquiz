@@ -1,6 +1,5 @@
 "use client";
 import GoogleSignInButton from "./google";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Modal from "./modal";
@@ -19,7 +18,8 @@ export default function SignUpForm() {
     confirmPassword: "",
   });
   // state for handle validation UI
-  const [validation, setValidation] = useState<
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_validation, setValidation] = useState<
     Record<keyof FormState, boolean>
   >({
     username: false,
@@ -59,7 +59,7 @@ export default function SignUpForm() {
       });
       const data = await response.json();
       if (!response.ok) {
-        return setError((e) => ({
+        return setError(({
           show: data.status,
           message:
             data.error ||
@@ -71,18 +71,19 @@ export default function SignUpForm() {
         setTimeout(() => {
           router.push("/auth/signin");
         }, 4000);
-        setSuccess((e) => ({
+        setSuccess(({
           show: data.status,
           message: "Account created successfully! You can now log in.",
         }));
       } else {
-        setError((e) => ({
+        setError(({
           show: data.status,
           message: data.messages,
         }));
       }
-    } catch (error) {
-      return setError((e) => ({
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_error) {
+      return setError(({
         show: true,
         message:
           "An error occurred while creating your account. Please try again later.",
@@ -91,10 +92,11 @@ export default function SignUpForm() {
   };
   // useEffect reset animation notifications
   useEffect(() => {
+    /* eslint-disable prefer-const */
     let timer: NodeJS.Timeout;
     timer = setTimeout(() => {
-      setError((e) => ({ message: "", show: false }));
-      setSuccess((e) => ({ message: "", show: false }));
+      setError(({ message: "", show: false }));
+      setSuccess(({ message: "", show: false }));
     }, 4000);
     return () => {
       clearTimeout(timer);

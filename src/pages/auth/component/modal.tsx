@@ -12,7 +12,6 @@ export default function Modal({
 }) {
   const [isMounted, setIsMounted] = useState(false);
   useEffect(() => {
-    console.log(show,isMounted)
     setIsMounted(show)
   }, [show]);
   useEffect(()=>{

@@ -16,7 +16,8 @@ export default function SignUpForm() {
     username: "",
     password: "",
   });
-  const [error,setError]=useState<ErrorState>({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_error,setError]=useState<ErrorState>({
     error:false,
     message:''
   })
@@ -33,7 +34,7 @@ export default function SignUpForm() {
       router.push('/')
     }
     else{
-      setError(e=>({error:true,message:res?.error}))
+      setError(({error:true,message:res?.error}))
     }
   }
   return (

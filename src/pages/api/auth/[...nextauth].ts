@@ -20,14 +20,6 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials, _req) {
         console.log("Authorizing with credentials:", credentials);
         const { username, password } = credentials ?? {};
-        console.log(
-          "password: ",
-          password,
-          typeof password,
-          "username: ",
-          username,
-          typeof username
-        );
         if (!username || !password) return null;
         const res = await fetch(
           `${
@@ -42,7 +34,7 @@ export const authOptions: NextAuthOptions = {
           }
         );
         const user = await res.json();
-        console.log(user);
+        console.log(user)
         if (res.ok && user)
           return {
             id: user._id.toString(),
@@ -69,20 +61,19 @@ export const authOptions: NextAuthOptions = {
     signOut: "/auth/signout",
   },
   callbacks: {
- async signIn({ user, account }) {
-    if (account?.provider === "credentials") {
-      // Just verify credentials user exists from signup
-      const db = (await clientPromise).db();
-      const userExist = await db.collection("users").findOne({
-        username: user.username,
-        provider:account?.provider
-      });
-      return !!userExist;
-    }
-    return true;
-  },
-    async session({ session, token:_token }) {
-      const db = (await clientPromise).db();
+    async signIn({ user, account }) {
+      if (account?.provider === "credentials") {
+        // Just verify credentials user exists from signup
+        const db = (await clientPromise).db("muniquiz");
+        const userExist = await db.collection("users").findOne({
+          username: user.name,
+        });
+        return !!userExist;
+      }
+      return true;
+    },
+    async session({ session, token: _token }) {
+      const db = (await clientPromise).db("muniquiz");
       // Try to find user by email and any provider
       const user = await db
         .collection("users")
@@ -93,6 +84,7 @@ export const authOptions: NextAuthOptions = {
       if (user?._id) {
         session.user.id = user._id.toString();
       }
+      console.log(session);
       return session;
     },
     async jwt({ token, account }) {
@@ -101,6 +93,21 @@ export const authOptions: NextAuthOptions = {
       }
       return token;
     },
+  },
+    events: {
+    async createUser({ user }) {
+      const db = (await clientPromise).db("muniquiz").collection("users");
+      await db.updateOne(
+        { email: user.email },
+        {
+          $set: {
+            role: "user",
+            createdAt: new Date(),
+            username: user.name?.replace(/\s/g, "") || "",
+          },
+        },{upsert:true}
+      );
+    }
   },
 };
 export default NextAuth(authOptions);
