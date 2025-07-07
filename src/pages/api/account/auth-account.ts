@@ -1,11 +1,20 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import clientPromise from "../../../../lib/mongoClient";
 import bcrypt from 'bcryptjs'
+import {z}from 'zod'
+const authParsedScheme=z.object({
+    username:z.string().min(1),
+    password:z.string().min(1)
+})
 export default async function handler(req:VercelRequest,res:VercelResponse){
     if(req.method!=='POST'){
         return res.status(500).json('only post method')
     }
-    const {username,password}=req.body
+    const parsedAuth=authParsedScheme.safeParse(req.body)
+    if(!parsedAuth.success){
+        return res.status(400).json({messages:'Invalid form format',status:true})
+    }
+    const {username,password}=parsedAuth.data
     try{
         const client=await clientPromise
         const db=client.db('muniquiz')

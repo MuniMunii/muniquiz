@@ -1,14 +1,21 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import clientPromise from "../../../../lib/mongoClient";
 import bcrypt from 'bcryptjs';
+import {z} from 'zod'
+const RegisterUserScheme=z.object({
+    username:z.string().min(3).max(20).trim(),
+    email:z.string().email().trim(),
+    password:z.string().min(6)
+})
 export default async function handler(req:NextApiRequest,res:NextApiResponse){
     if(req.method!=='POST'){
         return res.status(500).json('only post method')
     }
-    const {username,email,password}=req.body;
-    if(!username || !email || !password){
-        return res.status(400).json({error:"Username, email, and password are required.",status:true});
+    const parseResult=RegisterUserScheme.safeParse(req.body)
+    if(!parseResult.success){
+        return res.status(400).json({error:"Username, email, and password are required./Invalid",status:true});
     }
+    const {username,email,password}=parseResult.data;
     try {
         const client = await clientPromise;
         const db =client.db("muniquiz")
@@ -27,7 +34,6 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
             role:'user',
             provider: "credentials"
         })
-        console.log("Account created:", { username, email, password });
         return res.status(201).json({message:"Account created successfully",status:true});
     } catch (error) {
         console.error("Error creating account:", error);
