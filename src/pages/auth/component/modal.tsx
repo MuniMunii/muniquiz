@@ -29,12 +29,16 @@ export default function Modal({
     <AnimatePresence>
       {isMounted && (
         <motion.div
-          initial={{ y: -100 }}
-          animate={{ y: 0 }}
-          exit={{ y: -100 }}
-          className={`fixed top-4 translate-y-1/2 ${success?'bg-green-600':'bg-red-600'} size-42`}
+          initial={{ y: -100,opacity:0 }}
+          animate={{ y: 0,opacity:1 }}
+          exit={{ y: -100,opacity:0 }}
+          className={`fixed top-3 z-20 translate-x-0 rounded-md bg-neutral-200/70 border-neutral-500 border ${success?'text-green-600':'text-red-600'} min-h-fit max-h-42 w-72`}
         >
-          {messages}
+          <div className="size-full relative pt-5 px-3 pb-3 flex flex-col justify-between">
+            <button className="absolute top-0 right-2 text-black font-semibold" onClick={()=>setIsMounted(false)}>X</button>
+          <p className="text-center">{messages}</p>
+          <p className="text-neutral-800 text-center text-xs mt-2">This Message will close automatically</p>
+          </div>
         </motion.div>
       )}
     </AnimatePresence>

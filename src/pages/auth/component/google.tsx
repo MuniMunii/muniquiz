@@ -1,15 +1,25 @@
 'use client';
 import { signIn } from "next-auth/react";
 import Image from "next/image";
-export default function GoogleSignInButton({redirectUrl}:{redirectUrl: string}) {
+import GoogleButton from './image/googleButton.png'
+export default function GoogleSignInButton({redirectUrl,className}:{redirectUrl: string,className?:string}) {
   return (
     <button
-      onClick={(e) => { e.preventDefault();
-      signIn("google", { callbackUrl: redirectUrl });}}
-      className="flex flex-col border border-black items-center justify-center bg-white text-black rounded p-2 hover:bg-gray-100"
-    >
-      <Image src="/google.svg" alt="Google" className="mr-2" />
-      Sign in with Google
-    </button>
+  onClick={(e) => {
+    e.preventDefault();
+    signIn("google", { callbackUrl: redirectUrl });
+  }}
+  className={`inline-block border-none bg-transparent p-0 m-0 cursor-pointer ${className??''}`}
+>
+  <Image
+    src={GoogleButton}
+    alt="Sign in with Google"
+    width={0}
+    height={0}
+    sizes="100vw"
+    style={{ height: 'auto', width: 'auto' }}
+    priority
+  />
+</button>
   );
 }

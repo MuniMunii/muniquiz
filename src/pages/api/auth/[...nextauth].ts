@@ -5,6 +5,7 @@ import type { NextAuthOptions } from "next-auth";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import clientPromise from "../../../../lib/mongoClient";
 import CredentialsProvider from "next-auth/providers/credentials";
+import type { GoogleProfile } from "next-auth/providers/google";
 // authoption ini untuk initialisasi authentikasi
 /* eslint-disable @typescript-eslint/no-unused-vars */
 export const authOptions: NextAuthOptions = {
@@ -35,7 +36,7 @@ export const authOptions: NextAuthOptions = {
           }
         );
         const user = await res.json();
-        console.log(user)
+        console.log(user);
         if (res.ok && user)
           return {
             id: user._id.toString(),
@@ -50,6 +51,18 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      allowDangerousEmailAccountLinking:true,
+      profile(profile: GoogleProfile) {
+        return {
+          role: profile.role ?? "user",
+          id: profile.sub,
+          username: profile.name?.replace(/\s/g, "") || "",
+          image: profile.picture,
+          createdAt: new Date(),
+          name:profile.name,
+          email:profile.email,
+        };
+      },
       authorization: {
         params: {},
       },
@@ -95,20 +108,20 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
   },
-    events: {
-    async createUser({ user }) {
-      const db = (await clientPromise).db("muniquiz").collection("users");
-      await db.updateOne(
-        { email: user.email },
-        {
-          $set: {
-            role: "user",
-            createdAt: new Date(),
-            username: user.name?.replace(/\s/g, "") || "",
-          },
-        },{upsert:true}
-      );
-    }
-  },
+  //   events: {
+  //   async createUser({ user }) {
+  //     const db = (await clientPromise).db("muniquiz").collection("users");
+  //     await db.updateOne(
+  //       { email: user.email },
+  //       {
+  //         $set: {
+  //           role: "user",
+  //           createdAt: new Date(),
+  //           username: user.name?.replace(/\s/g, "") || "",
+  //         },
+  //       },{upsert:true}
+  //     );
+  //   }
+  // },
 };
 export default NextAuth(authOptions);
