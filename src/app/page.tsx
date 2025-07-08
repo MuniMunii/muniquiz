@@ -1,15 +1,15 @@
   'use server';
-  import Link from "next/link";
-import SignoutButton from "./component/signout";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../lib/authOption";
+import { NavbarMain } from "./component/navbarMain";
   export default async function Home() {
     const session=await getServerSession(authOptions)
     console.log(session)
     return (
-      <div className="size-full bg-amber-400 flex gap-4">
-        <Link href={'/auth/signin'}>Sign In</Link>
-        <SignoutButton session={!!session}/>
+      <div className="size-full min-h-screen">
+        {/* <Link href={'/auth/signin'}>Sign In</Link>
+        <SignoutButton session={!!session}/> */}
+        <NavbarMain/>
       </div>
     );
   }

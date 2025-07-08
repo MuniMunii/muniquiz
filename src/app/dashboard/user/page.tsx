@@ -1,9 +1,15 @@
-export default function DashboardUserPage() {
+import {Navbar1} from "./component/navbar";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../../../../lib/authOption";
+import { redirect } from "next/navigation";
+export default async function DashboardUserPage() {
+  const session=await getServerSession(authOptions)
+  if(!session){
+    return redirect('/verified')
+  }
   return (
-    <div>
-      <h1>Dashboard User Page</h1>
-      <p>This is the User page for the dashboard.</p>
-      <p>Only accessible by users with admin privileges.</p>
+    <div className="w-full h-full min-h-screen">
+      <Navbar1/>
     </div>
   );
 }
