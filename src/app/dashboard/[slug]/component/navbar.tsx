@@ -1,4 +1,8 @@
 import { Book, Menu, Sunset, Trees, Zap } from "lucide-react";
+import { faSquarePlus } from "@fortawesome/free-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../../../../../lib/authOption";
 import {
   Accordion,
   AccordionContent,
@@ -32,6 +36,7 @@ interface MenuItem {
 }
 
 interface Navbar1Props {
+  username?:string
   logo?: {
     url: string;
     src: string;
@@ -46,7 +51,6 @@ interface Navbar1Props {
     };
   };
 }
-
 const Navbar1 = ({
   logo = {
     url: "https://www.shadcnblocks.com",
@@ -126,10 +130,11 @@ const Navbar1 = ({
       url: "#",
     },
   ],
-  auth = {
-    AddNews: { title: "Add News", url: "#" },
-  },
+  username
 }: Navbar1Props) => {
+  const auth= {
+     url: username ? `/new-quiz/${username}` : "/login",
+  }
   return (
     <section className="py-4 px-3 bg-[rgba(255,255,255,0.7)] backdrop-blur-md border-b-gray-300">
       <div className="container">
@@ -154,13 +159,12 @@ const Navbar1 = ({
           </div>
           <div className="flex gap-2 items-center">
             {/* button add news */}
-            <Button asChild size="sm" className="text-white bg-blue-600 hover:bg-blue-700 transition duration-150">
-              <Link href={auth.AddNews.url}>{auth.AddNews.title}</Link>
+            <Button asChild size="sm" className="text-white bg-blue-600 hover:bg-blue-700 transition duration-150 flex items-center">
+              <Link href={auth.url}><FontAwesomeIcon icon={faSquarePlus}/>Add News</Link>
             </Button>
             <SignoutButton/>
           </div>
         </nav>
-
         {/* Mobile Menu */}
         <div className="block lg:hidden">
           <div className="flex items-center justify-between">
@@ -191,8 +195,8 @@ const Navbar1 = ({
                     {menu.map((item) => renderMobileMenuItem(item))}
                   </Accordion>
                   <div className="flex flex-col gap-3">
-                    <Button asChild className="text-white bg-blue-600 hover:bg-blue-700 transition duration-150">
-                      <Link href={auth.AddNews.url}>{auth.AddNews.title}</Link>
+                    <Button asChild className="text-white bg-blue-600 hover:bg-blue-700 transition duration-150 flex items-center">
+                      <Link href={auth.url}><FontAwesomeIcon icon={faSquarePlus}/>Add News</Link>
                     </Button>
                     <SignoutButton/>
                   </div>

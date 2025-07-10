@@ -2,14 +2,14 @@
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { motion, useAnimation } from "framer-motion";
-export default function VerifiedRoute({ role }: { role: string | undefined }) {
+export default function VerifiedRoute({ role,username }: { role: string | undefined,username:string|undefined }) {
   const router = useRouter();
   const controls = useAnimation();
   const xControls = useAnimation();
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (role === "admin") router.push("/dashboard/admin");
-      else if (role === "user") router.push("/dashboard/user");
+      else if (role === "user") router.push(`/dashboard/${username}`);
       else {
         return router.push("/");
       }

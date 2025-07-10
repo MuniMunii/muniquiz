@@ -172,7 +172,7 @@ const NavbarMain = async ({
                 >
                   <Link
                     href={`/dashboard/${
-                      session.user.role === "user" ? "user" : "admin"
+                      session.user.role === "user" ? session.user.username : "admin"
                     }`}
                   >
                     Dashboard
@@ -228,7 +228,7 @@ const NavbarMain = async ({
                         <Button className="text-white bg-blue-600 hover:bg-blue-700 transition duration-150">
                           <Link
                             href={`/dashboard/${
-                              session.user.role === "user" ? "user" : "admin"
+                              session.user.role === "user" ? session.user.username : "admin"
                             }`}
                           >
                             Dashboard

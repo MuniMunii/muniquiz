@@ -44,3 +44,5 @@ next-env.d.ts
 #json
 client_secret_357882738525-gv4i1v1s5hj1pksqnr59fn68l47u9fus.apps.googleusercontent.com.json
 client_secret_357882738525-gv4i1v1s5hj1pksqnr59fn68l47u9fus.apps.googleusercontent.com
+
+.vercel
