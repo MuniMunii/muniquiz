@@ -2,7 +2,7 @@
 import GoogleSignInButton from "./google";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import Modal from "./modal";
+import Modal from "../../../app/component/modal";
 import Link from "next/link";
 interface FormState {
   username: string;

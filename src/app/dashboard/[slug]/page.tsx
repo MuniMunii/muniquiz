@@ -33,7 +33,7 @@ export default async function DashboardUserPage({params}:{params:Promise<{slug:s
           {/* profile */}
           <div className="h-full w-2/5 max-md:w-full bg-violet-200 rounded-md flex-col flex p-4 gap-6 justify-between shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]">
           <h1 className="text-xl text-slate-800">Hello, {user?.username}</h1>
-          {user?.image?<Image src={user?.image} alt="User Profile" width={120} height={120} className="rounded-full self-center"/>:<Image src={''} alt=""/>}
+          {user?.image?<Image src={user?.image} alt="User Profile" width={120} height={120} className="rounded-full self-center"/>:''}
           <Button type="button"className="flex gap-3 items-center bg-indigo-500 hover:bg-indigo-600 w-fit py-1.5 px-2.5 rounded-md"><FontAwesomeIcon icon={faPenToSquare}/>Edit Profile</Button>
           </div>
         </div>

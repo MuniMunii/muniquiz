@@ -1,4 +1,4 @@
-import Modal from "./component/modal";
+import Modal from "../../app/component/modal";
 import { useSearchParams } from "next/navigation";
 import SignInForm from "./component/signin_form";
 export default function SignInPage() {
