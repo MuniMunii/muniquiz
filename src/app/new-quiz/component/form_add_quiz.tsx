@@ -22,7 +22,7 @@ export default function AddQuiz({ user }: any) {
   } = useQuizStore();
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const ReconstructData = [
+    const ReconstructData = 
       {
         id: uuid(),
         enterID:uuid(),
@@ -31,9 +31,10 @@ export default function AddQuiz({ user }: any) {
         titleQuiz: quizName,
         Quiz: quizzes,
         participate:[]
-      },
-    ];
-    console.log(ReconstructData);
+      }
+    console.log(ReconstructData)
+    const request=await fetch('/api/quiz/add-quiz',{method:'POST',body:JSON.stringify(ReconstructData),headers:{'Content-Type':'application/json'}})
+    const data=await request.json()
   };
   return (
     <>

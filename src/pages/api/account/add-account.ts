@@ -23,7 +23,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
         const userExist=await posts.findOne({$or:[{email},{username}]})
         const hash=await bcrypt.hash(password,10)
         if(userExist){
-            return res.status(409).json({messages:'Account with this Username/Email is already exist',status:true})
+            return res.status(409).json({message:'Account with this Username/Email is already exist',status:true})
         }
         await posts.insertOne({
             username,
