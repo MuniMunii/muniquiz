@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { v4 as uuid } from "uuid";
+import { nanoid } from "nanoid";
 
 interface QuizQuestion {
   question_id?:string;
@@ -33,8 +34,8 @@ export const useQuizStore = create<QuizStore>()(
         id: uuid(),
         title: 'Sample Quiz',
         question: [
-          {question_id:uuid(), question: 'What is 2 + 2?', answer: true },
-          {question_id:uuid(), question: 'Is the Earth flat?', answer: false },
+          {question_id:nanoid(12), question: 'What is 2 + 2?', answer: true },
+          {question_id:nanoid(12), question: 'Is the Earth flat?', answer: false },
         ],
       },
     ],
@@ -42,9 +43,9 @@ export const useQuizStore = create<QuizStore>()(
     addQuiz: () =>
       set((state) => {
         state.quizzes.push({
-          id: uuid(),
+          id: nanoid(12),
           title: 'Title Question',
-          question: [{ question: 'Question 1', answer: true },{ question: 'Question 2', answer: false }],
+          question: [{question_id:nanoid(12),question: 'Question 1', answer: true },{question_id:nanoid(12),question: 'Question 2', answer: false }],
         });
       }),
 // remove quiz
@@ -56,7 +57,7 @@ export const useQuizStore = create<QuizStore>()(
     addQuestion: (quizIndex) =>
       set((state) => {
         state.quizzes[quizIndex].question.push({
-          question_id:uuid(),
+          question_id:nanoid(12),
           question: `Question ${state.quizzes[quizIndex].question.length+1}`,
           answer: false,
         });

@@ -1,8 +1,6 @@
 import { Book, Menu, Sunset, Trees, Zap } from "lucide-react";
 import { faSquarePlus } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../../../../../lib/authOption";
 import {
   Accordion,
   AccordionContent,

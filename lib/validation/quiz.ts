@@ -9,13 +9,17 @@ export const QuizScheme=z.object({
     title:z.string().trim().min(1, 'Quiz title cannot be empty'),
     question:z.array(QuestionScheme).min(1, 'Each quiz must have at least 1 question')
 })
+const CategoryEnum=z.enum(['math','biology','bussiness','tech','other'])
 export const OwnerQuizScheme=z.object({
     id:z.string(),
-    owner:z.string(),
+    enterID:z.string().max(10),
+    owner:z.string().optional(),
     created_At:z.union([z.coerce.date(), z.string()]),
     titleQuiz:z.string().trim().min(1, 'Title cannot be empty'),
     // nanti di ganti sesuai kebutuhan
     Quiz:z.array(QuizScheme).min(1, 'There must be at least 3 quiz'),
+    timer:z.number(),
+    category:CategoryEnum.default('other'),
     participate:z.array(z.any())
 })
 export type OwnerQuizType=z.infer<typeof OwnerQuizScheme>
