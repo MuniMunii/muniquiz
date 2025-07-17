@@ -49,11 +49,13 @@ export const useQuizStore = create<QuizStore>()(
         });
       }),
 // remove quiz
+// this take quiz index to detect position of quiz and delete the quiz
     removeQuiz: (quizIndex) =>
       set((state) => {
         state.quizzes.splice(quizIndex, 1);
       }),
 // add Question in quiz object
+// this take quiz index to detect position of quiz to add the question/answer
     addQuestion: (quizIndex) =>
       set((state) => {
         state.quizzes[quizIndex].question.push({
@@ -63,21 +65,25 @@ export const useQuizStore = create<QuizStore>()(
         });
       }),
 // remove question in quiz
+// this take quiz index and question index as parameter to detect the value of quiz and delete the value
     removeQuestion: (quizIndex, questionIndex) =>
       set((state) => {
         state.quizzes[quizIndex].question.splice(questionIndex, 1);
       }),
 // update title of quiz
+// this take quiz index as parameter and newtext to change the title name
     updateTitle: (quizIndex, newTitle) =>
       set((state) => {
         state.quizzes[quizIndex].title = newTitle;
       }),
 // update question inside quiz return newtext
+// this take quiz index and question index as parameter and newtext to change the question name
     updateQuestion: (quizIndex, questionIndex, newText) =>
       set((state) => {
         state.quizzes[quizIndex].question[questionIndex].question = newText;
       }),
 // toggle answer return boolean in question inside quiz
+// this take quiz index and question index as parameter to detect the value of quiz
     toggleAnswer: (quizIndex, questionIndex) =>
       set((state) => {
         state.quizzes[quizIndex].question.forEach((q,i)=>{q.answer=i===questionIndex})

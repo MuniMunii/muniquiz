@@ -15,7 +15,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-type CategoryProps='math'|'biology'|'bussiness'|'tech'|'other'
+// type for label categoty
+type CategoryProps = 'math' | 'biology' | 'bussiness' | 'tech' | 'other';
+interface CategoryData {
+  label: CategoryProps;
+  image: string;
+}
+// Record for providing default image/icon and label
+const categoryRecord: Record<CategoryProps, CategoryData> = {
+  math: { label: 'math', image: 'https://res.cloudinary.com/duyurqj38/image/upload/v1752747793/math_b38wzt.png' },
+  biology: { label: 'biology', image: 'https://res.cloudinary.com/duyurqj38/image/upload/v1752747651/biology_tp0avi.png' },
+  bussiness: { label: 'bussiness', image: 'https://res.cloudinary.com/duyurqj38/image/upload/v1752747715/bussiness_yipntx.png' },
+  tech: { label: 'tech', image: 'https://res.cloudinary.com/duyurqj38/image/upload/v1752747501/tech-icon_sndebg.png' },
+  other: { label: 'other', image: 'https://res.cloudinary.com/duyurqj38/image/upload/v1752747872/other_vkbvs0.png' }
+};
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function AddQuiz({ user }: any) {
   const [quizName, setQuizName] = useState<string>("");
@@ -37,13 +50,15 @@ export default function AddQuiz({ user }: any) {
     removeQuestion,
     removeQuiz,
   } = useQuizStore();
+  // function post adding quiz
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const ReconstructData = {
       titleQuiz: quizName,
       Quiz: quizzes,
-      category:category,
-      timer:timer
+      category:categoryRecord[category].label,
+      timer:timer,
+      image:categoryRecord[category].image
     };
     const request = await fetch("/api/quiz/add-quiz", {
       method: "POST",
@@ -150,7 +165,7 @@ export default function AddQuiz({ user }: any) {
             </div>
             <div className="border-t border-t-gray-400 flex flex-col gap-3">
             <p>Timer: {timer===0&&'No Timer'}{timer===30&&'30 Minute'}{timer===60&&'1 Hour'}{timer===90&&'1 Hour 30 Minutes'}{timer===120&&'2 Hours'}</p>
-            <p>Category: {category}</p>
+            <p>Category: {String(category).charAt(0).toUpperCase()+String(category).slice(1)}</p>
           </div>
           </div>
         </div>

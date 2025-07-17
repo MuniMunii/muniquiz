@@ -164,7 +164,7 @@ const Navbar1 = ({
           </div>
         </nav>
         {/* Mobile Menu */}
-        <div className="block lg:hidden">
+        <div className="block lg:hidden text-neutral-800">
           <div className="flex items-center justify-between">
             {/* Logo */}
             <Link href={logo.url} className="flex items-center gap-2">
@@ -172,7 +172,7 @@ const Navbar1 = ({
             </Link>
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="outline" size="icon">
+                <Button variant="outline" size="icon" className="text-neutral-800">
                   <Menu className="size-4" />
                 </Button>
               </SheetTrigger>
@@ -184,7 +184,7 @@ const Navbar1 = ({
                     </Link>
                   </SheetTitle>
                 </SheetHeader>
-                <div className="flex flex-col gap-6 p-4">
+                <div className="flex flex-col gap-6 p-4 text-neutral-800">
                   <Accordion
                     type="single"
                     collapsible

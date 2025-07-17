@@ -27,6 +27,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
         category:req.body.category,
         timer:req.body.timer,
         titleQuiz:req.body.titleQuiz,
+        image:'',
         Quiz:parsedBody.data,
         participate:[],
       }
@@ -35,6 +36,6 @@ if (!ownerValidation.success) {
     return res.status(400).json({ message: 'Quiz validation failed, Please try again', errors: ownerValidation.error,status:true });
 }
     await Quiz.insertOne(ReconstructData)
-        res.status(200).json({message:'Quiz Successfully added',status:true,test:ReconstructData})
+        res.status(200).json({message:'Quiz Successfully added',status:true,enterID:ReconstructData.enterID})
     }catch(error){return res.status(500).json({message:'Server error try again',status:true,error:error})}
 }

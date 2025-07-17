@@ -11,3 +11,7 @@ interface IssuesProps{
 interface ZodErrors{
     issues:IssuesProps[]
 }
+interface ErrorProps{
+    message:string,
+    error:boolean
+}
