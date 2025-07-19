@@ -27,7 +27,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
         category:req.body.category,
         timer:req.body.timer,
         titleQuiz:req.body.titleQuiz,
-        image:'',
+        image:req.body.image,
         Quiz:parsedBody.data,
         participate:[],
       }

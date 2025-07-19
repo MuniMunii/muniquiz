@@ -14,8 +14,18 @@
     transition: background-color 5000s ease-in-out 0s !important;
     caret-color: #000;
   }
+ 
+  .shadow-main{
+    box-shadow: 0px 2px 3px -1px rgba(0,0,0,0.1),
+                0px 1px 0px 0px rgba(25,28,33,0.02),
+                0px 0px 0px 1px rgba(25,28,33,0.08);
+  }
+}
+@theme{
+  
 }
 body {
+  scrollbar-gutter:  stable ;
   min-height: 100vh;
   color: white;
   background:linear-gradient(135deg, #FADADD, #C3EAF5);
