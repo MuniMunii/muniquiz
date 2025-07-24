@@ -87,14 +87,18 @@ export const authOptions: NextAuthOptions = {
       }
       return true;
     },
-    async session({ session, token: _token }) {
+    async session({ session, token:_token }) {
       const db = (await clientPromise).db("muniquiz");
       // Try to find user by email and any provider
       const user = await db
         .collection("users")
         .findOne({ email: session.user.email });
+        // Just add key in Session type to pass costumize key in session
       if (user?.role) {
         session.user.role = user.role;
+      }
+      if (user?.username) {
+        session.user.username = user.username;
       }
       if (user?._id) {
         session.user.id = user._id.toString();

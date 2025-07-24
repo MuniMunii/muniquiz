@@ -1,4 +1,5 @@
 import {z} from 'zod'
+const CategoryEnum=z.enum(['math','biology','bussiness','tech','other'])
 export const QuestionScheme=z.object({
     question_id:z.string(),
     question:z.string().trim().min(1, 'Answer choice title cannot be empty'),
@@ -9,7 +10,14 @@ export const QuizScheme=z.object({
     title:z.string().trim().min(1, 'Quiz title cannot be empty'),
     question:z.array(QuestionScheme).min(2, 'Each quiz must have at least 2 Answer Choice')
 })
-const CategoryEnum=z.enum(['math','biology','bussiness','tech','other'])
+export const ParticipateScheme=z.object({
+    id:z.string(),
+    username:z.string(),
+    played_at:z.union([z.coerce.date(), z.string()]),
+    true_answer:z.number(),
+    quiz_title: z.string(),
+  quiz_category: CategoryEnum
+})
 export const OwnerQuizScheme=z.object({
     id:z.string(),
     enterID:z.string().max(10),
@@ -21,7 +29,7 @@ export const OwnerQuizScheme=z.object({
     timer:z.number(),
     image:z.string(),
     category:CategoryEnum.default('other'),
-    participate:z.array(z.any())
+    participate:z.array(ParticipateScheme)
 })
 export type OwnerQuizType=z.infer<typeof OwnerQuizScheme>
 export type QuestionType=z.infer<typeof QuestionScheme>
