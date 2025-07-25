@@ -3,17 +3,18 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import useQuiz from "@/app/services/useQuiz";
-export default function QuizPage({ params }: { params: { quizName: string } }) {
+// import useQuiz from "@/app/services/useQuiz";
+export default function QuizPage({ params }: { params: Promise<{ quizName: string }> }) {
   const { data: session } = useSession();
-  const { Quiz, isLoading, isError } = useQuiz({
-    url: "get-myquiz",
-    singleQuiz: true,
-  });
+  // const { Quiz, isLoading, isError } = useQuiz({
+  //   url: "get-myquiz",
+  //   singleQuiz: true,
+  // });
   const user = session?.user.username;
   const router = useRouter();
   const [username, setUsername] = useState<string>("");
-  const [start, setState] = useState<boolean>(false);
+  // const [start, setState] = useState<boolean>(false);
+  const start=false
   useEffect(() => {
     if (user) {
       setUsername(user);
@@ -36,7 +37,7 @@ export default function QuizPage({ params }: { params: { quizName: string } }) {
             onSubmit={() => {
               if (username.trim())
                 router.push(
-                  `/quiz/${params.quizName}/question/1?username=${username}`
+                  `/quiz/${params}/question/1?username=${username}`
                 );
               else return;
             }}

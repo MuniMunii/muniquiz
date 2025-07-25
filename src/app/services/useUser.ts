@@ -1,6 +1,5 @@
 import useSWR from "swr"
-import type { OwnerQuizType } from "../../../lib/validation/quiz"
-import { Session, User } from "next-auth";
+import { Session} from "next-auth";
 export default function useUser (id:string) {
 const fetcher = (url: string) => fetch(url).then(res => res.json());
   const { data, error, isLoading } = useSWR(`/api/user/${id}`, fetcher)

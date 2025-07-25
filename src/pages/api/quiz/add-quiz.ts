@@ -1,16 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import clientPromise from "../../../../lib/mongoClient";
-import { OwnerQuizScheme,QuizScheme } from "../../../../lib/validation/quiz";
+import { OwnerQuizScheme,QuestionScheme } from "../../../../lib/validation/quiz";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../../../lib/authOption";
 import { v4 as uuid } from "uuid";
 import { nanoid } from "nanoid";
-import {z}from 'zod'
+import {z} from 'zod'
 export default async function handler(req:NextApiRequest,res:NextApiResponse){
     if(req.method!=='POST'){return res.status(500).json({message:'only post method'})}
     const session=await getServerSession(req, res, authOptions)
     console.log(session)
-    const parsedBody=z.array(QuizScheme).safeParse(req.body.Quiz)
+    const parsedBody=z.array(QuestionScheme).safeParse(req.body.Quiz)
     console.log(parsedBody.data)
     if(!parsedBody.success){
         return res.status(403).json({message:'All input must be filled',status:true,errors: parsedBody.error})

@@ -16,19 +16,57 @@ interface Quiz {
   question: QuizQuestion[];
 }
 
+/**
+ * Zustand store interface for managing quizzes and their questions.
+ */
 interface QuizStore {
   quizzes: Quiz[];
+  /**
+   * Add a new empty quiz to the list.
+   */
   addQuiz: () => void;
+  /**
+   * Remove a quiz by index.
+   * @param quizIndex - The index of the quiz to remove.
+   */
   removeQuiz: (quizIndex: number) => void;
+  /**
+   * Add a new question to a specific quiz.
+   * @param quizIndex - The index of the quiz to which the question will be added.
+   */
   addQuestion: (quizIndex: number) => void;
+  /**
+   * Remove a question from a quiz.
+   * @param quizIndex - The index of the quiz.
+   * @param questionIndex - The index of the question to remove.
+   */
   removeQuestion: (quizIndex: number, questionIndex: number) => void;
+  /**
+   * Update the title of a quiz.
+   * @param quizIndex - The index of the quiz.
+   * @param newTitle - The new title string.
+   */
   updateTitle: (quizIndex: number, newTitle: string) => void;
+  /**
+   * Update the text of a question.
+   * @param quizIndex - The index of the quiz.
+   * @param questionIndex - The index of the question to update.
+   * @param newText - The new question text.
+   */
   updateQuestion: (
     quizIndex: number,
     questionIndex: number,
     newText: string
   ) => void;
+  /**
+   * Toggle the selected answer state for a question.
+   * @param quizIndex - The index of the quiz.
+   * @param questionIndex - The index of the question to toggle.
+   */
   toggleAnswer: (quizIndex: number, questionIndex: number) => void;
+  /**
+   * Reset the entire quiz store to initial state.
+   */
   resetQuiz: () => void;
 }
 

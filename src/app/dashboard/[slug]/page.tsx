@@ -8,7 +8,6 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import MyQuiz from "./component/myquiz";
 import JoinInput from "@/app/component/joinInput";
-import { useSession } from "next-auth/react";
 import { FaHashtag } from "react-icons/fa6";
 import Link from "next/link";
 export default async function DashboardUserPage({params}:{params:Promise<{slug:string}>}) {

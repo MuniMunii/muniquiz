@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuizStore } from "../store/QuizStore";
 import type { FormEvent } from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";

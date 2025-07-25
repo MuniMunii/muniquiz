@@ -1,17 +1,8 @@
-import { authOptions } from "../../../../lib/authOption";
-import { getServerSession } from "next-auth";
 import { NavbarMain } from "@/app/component/navbarMain";
 import { Button } from "@/components/ui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHourglass } from "@fortawesome/free-regular-svg-icons";
-export default async function JoinPage({
-  params,
-}: {
-  params: { slug: string };
-}) {
-  const { slug } = await params;
-  const session = await getServerSession(authOptions);
-  const user = session?.user;
+export default async function JoinPage() {
   return (
     <div className="size-full min-h-screen">
       <NavbarMain />

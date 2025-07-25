@@ -4,7 +4,6 @@
 // refactor and Adding function bypassNavigation so we dont need router.push
 /* 
         <Button variant={"destructive"} onClick={{cancelNavigation;router.push('')}}>Cancel</Button>
-
 */
 import { useEffect, useState, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
@@ -37,7 +36,7 @@ const useBlockNavigation = (
       setIsAttemptingNavigation(true);
       setNextRoute(url);
     };
-    router.push = ((url, _options) => {
+    router.push = ((url) => {
       handleNavigation(url);
     }) as typeof router.push;
     return () => {

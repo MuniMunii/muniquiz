@@ -14,5 +14,5 @@ export default async function handler (req:NextApiRequest,res:NextApiResponse){
         const searchingUserParticipateQuiz=await Participate.find({username:session.user.username}).toArray()
         if(searchingUserParticipateQuiz.length===0)return res.status(404).json({message:'Still not participating in any quiz'})
         res.status(200).json({message:'Data Success',data:searchingUserParticipateQuiz})
-    }catch(error){return res.status(500).json({messae:'Internal server error'})}
+    }catch(error){return res.status(500).json({message:'Internal server error'+error})}
 }

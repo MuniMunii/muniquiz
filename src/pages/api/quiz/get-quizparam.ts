@@ -8,5 +8,5 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
         const Quiz=(await clientPromise).db('muniquiz').collection('quiz')
         const findOneQuiz=await Quiz.findOne({enterID:enterID})
         res.status(200).json({message:'Success retrived data',data:findOneQuiz})
-    }catch(error){return res.status(500).json({message:'Internal server error'})}
+    }catch(error){return res.status(500).json({message:'Internal server error'+error})}
 }
