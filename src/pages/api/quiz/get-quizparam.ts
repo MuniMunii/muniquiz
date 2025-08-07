@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import clientPromise from "../../../../lib/mongoClient";
 
 export default async function handler(req:NextApiRequest,res:NextApiResponse){
-    if(req.method!=="GET")return res.status(403).json({message:'Only GET method'});
+    if(req.method!=="POST")return res.status(403).json({message:'Only POST method'});
     const {enterID}=req.body
     try{
         const Quiz=(await clientPromise).db('muniquiz').collection('quiz')

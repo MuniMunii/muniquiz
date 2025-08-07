@@ -29,7 +29,6 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
         titleQuiz:req.body.titleQuiz,
         image:req.body.image,
         Quiz:parsedBody.data,
-        participate:[],
       }
       const ownerValidation = OwnerQuizScheme.safeParse(ReconstructData);
 if (!ownerValidation.success) {

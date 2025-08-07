@@ -1,5 +1,5 @@
 "use client";
-import useQuiz from "@/app/services/useQuiz";
+import {useQuiz} from "@/app/services/useQuiz";
 import SkeletonLoading from "@/app/component/skeleton/skeletonCard";
 import {
   Carousel,

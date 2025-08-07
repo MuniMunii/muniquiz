@@ -16,7 +16,7 @@ export const ParticipateScheme=z.object({
     played_at:z.union([z.coerce.date(), z.string()]),
     true_answer:z.number(),
     titleQuiz: z.string(),
-  quiz_category: CategoryEnum
+    quiz_category: CategoryEnum
 })
 export const OwnerQuizScheme=z.object({
     id:z.string(),
@@ -31,5 +31,5 @@ export const OwnerQuizScheme=z.object({
     quiz_category:CategoryEnum.default('other'),
 })
 export type OwnerQuizType=z.infer<typeof OwnerQuizScheme>
-export type QuestionType=z.infer<typeof AnswerChoiceScheme>
-export type QuizType=z.infer<typeof QuestionScheme>
+export type AnswerChoiceType=z.infer<typeof AnswerChoiceScheme>
+export type QuestionType=z.infer<typeof QuestionScheme>

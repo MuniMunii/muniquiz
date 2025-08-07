@@ -1,7 +1,7 @@
 import type { OwnerQuizType } from "../../../lib/validation/quiz";
 import useSWR from "swr";
 import { useMemo } from "react";
-export default function useQuiz<T extends boolean>({ url, singleQuiz }: { url: string, singleQuiz: T }) {
+export function useQuiz<T extends boolean>({ url, singleQuiz }: { url: string, singleQuiz: T }) {
   const fetcher = (url: string) => fetch(url).then(res => res.json());
   const { data, error, isLoading } = useSWR(`/api/quiz/${url}`, fetcher,    {
       // Prevent flickering by disabling automatic revalidation
@@ -26,4 +26,17 @@ const memoizedQuiz: QuizType = useMemo(() => {
     isLoading,
     isError: error as ErrorProps
   };
+}
+export async function sendRequestQuiz(url:string,{arg}:{arg:{enterID:string}}){
+ const response = await fetch(`/api/quiz/${url}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(arg),
+  });
+  if(!response.ok){
+    throw new Error('Failed to fetch Quiz')
+  }
+  return response.json()
 }

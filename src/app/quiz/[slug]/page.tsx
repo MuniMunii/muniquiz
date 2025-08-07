@@ -1,11 +1,16 @@
 "use client";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import {sendRequestQuiz } from "@/app/services/useQuiz";
+import useSWRMutation from "swr/mutation";
+import { OwnerQuizType } from "../../../../lib/validation/quiz";
 // import useQuiz from "@/app/services/useQuiz";
-export default function QuizPage({ params }: { params: Promise<{ quizName: string }> }) {
+export default function QuizPage({ params }: { params: Promise<{ slug: string }> }) {
   const { data: session } = useSession();
+  const {slug}=use(params)
+  const enterID=slug
   // const { Quiz, isLoading, isError } = useQuiz({
   //   url: "get-myquiz",
   //   singleQuiz: true,
@@ -21,6 +26,26 @@ export default function QuizPage({ params }: { params: Promise<{ quizName: strin
     }
     console.log(session);
   }, [session]);
+  const {trigger,isMutating}=useSWRMutation<OwnerQuizType,Error,string,{enterID:string}>('get-enterid',sendRequestQuiz)
+  useEffect(() => {
+  if (enterID) {
+    console.log(enterID)
+    trigger({ enterID }); 
+  }
+}, [enterID, trigger]);
+  const handleClick=async()=>{
+    try{
+      console.log('test handle')
+        console.log('test handle if')
+              const result=await trigger({enterID:enterID})
+              console.log(result)
+              console.log(enterID)
+            router.push(
+                  `/quiz/${result.enterID}/1?username=${username}`
+                );
+              
+    }catch(err){throw new Error(`fetching error:${err}`)}
+  }
   if (!start) {
     return (
       <div className="size-full min-h-screen flex items-center justify-center">
@@ -33,13 +58,10 @@ export default function QuizPage({ params }: { params: Promise<{ quizName: strin
             className="border border-gray-400 text-neutral-700"
           />
           <Button
+          disabled={isMutating}
             type="button"
-            onSubmit={() => {
-              if (username.trim())
-                router.push(
-                  `/quiz/${params}/question/1?username=${username}`
-                );
-              else return;
+            onClick={() => {
+              handleClick()
             }}
             className="border border-gray-800"
           >
