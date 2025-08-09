@@ -3,18 +3,21 @@ import {useQuiz,sendRequestQuiz} from "@/app/services/useQuiz"
 import useSWRMutation from 'swr/mutation'
 import React, { useEffect,useState } from "react";
 import { OwnerQuizType } from "../../../../../lib/validation/quiz";
-import { AnimatePresence } from "framer-motion";
 import SlideQuiz from "./component/slide";
+import useBlockNavigation from "@/app/hook/useBlockNavigation";
+import ConfirmationModal from "@/app/component/confirmationModal";
 interface MutationProps{
     message:string;
     data:OwnerQuizType
 }
 export default function QuestionPage({params}:{params:Promise<{slug:string,number:string}>}){
     const [Quiz,setQuiz]=useState<OwnerQuizType|undefined>()
+    // Number params still has question function to use
 const {number,slug}=React.use(params)
+    const { isAttemptingNavigation, cancelNavigation,bypassNavigation } = useBlockNavigation(true, [`/quiz/${slug}`]);
 const enterID=slug
-const questionIndex=Number(number)-1
 const {trigger,error,isMutating}=useSWRMutation<MutationProps,Error,string,{enterID:string}>('get-quizparam',sendRequestQuiz)
+useEffect(()=>{console.log(number,slug)},[params])
 useEffect(() => {
     trigger({ enterID:enterID }).then((res)=>setQuiz(res.data));
   }, [enterID, trigger]);
@@ -26,6 +29,8 @@ useEffect(() => {
 // if (!currentQuiz) return <div>Invalid quiz index</div>;
 // Main Component
     return (
+        <>
+    <ConfirmationModal href={`/quiz/join`} isAttemptingNavigation={isAttemptingNavigation} bypassNavigation={bypassNavigation} ConfirmationText="Are you sure want to leave?, this quiz will be destroyed" cancelNavigation={cancelNavigation}/>
         <div className="text-white w-full h-full min-h-screen flex flex-col bg-purple-500">
             <div className="w-full h-fit bg-slate-800 flex justify-between px-6 py-4 items-center">
                 <p>{Quiz?.titleQuiz}</p>
@@ -33,5 +38,6 @@ useEffect(() => {
             </div>
             <SlideQuiz key={'slideQuiz'} question={Quiz?.Quiz} isLoading={isMutating}/>
         </div>
+        </>
     )
 }
