@@ -56,7 +56,7 @@ export default function MyQuiz() {
     <div className="text-center mx-auto">
       <FontAwesomeIcon className="text-red-500" icon={faXmarkCircle} />
       <p className="text-neutral-100 font-semibold">
-        You dont have quiz any yet
+        You dont have any quiz yet
       </p>
     </div>
   );

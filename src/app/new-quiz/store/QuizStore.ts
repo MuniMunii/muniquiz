@@ -2,18 +2,13 @@ import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { v4 as uuid } from "uuid";
 import { nanoid } from "nanoid";
-
-interface QuizQuestion {
-  question_id?: string;
-  question: string;
-  answer: boolean;
-}
+import type { AnswerChoiceType } from "../../../../lib/validation/quiz";
 
 interface Quiz {
   id: string;
   title: string;
   questionCounter?: number;
-  question: QuizQuestion[];
+  question:AnswerChoiceType[];
 }
 
 /**
@@ -34,7 +29,7 @@ interface QuizStore {
    * Add a new question to a specific quiz.
    * @param quizIndex - The index of the quiz to which the question will be added.
    */
-  addQuestion: (quizIndex: number) => void;
+  addAnswerChoice: (quizIndex: number) => void;
   /**
    * Remove a question from a quiz.
    * @param quizIndex - The index of the quiz.
@@ -78,11 +73,12 @@ export const useQuizStore = create<QuizStore>()(
         id: uuid(),
         title: "Sample Quiz",
         question: [
-          { question_id: nanoid(12), question: "What is 2 + 2?", answer: true },
+          { question_id: nanoid(12), question: "What is 2 + 2?", answer: false,real_answer:true },
           {
             question_id: nanoid(12),
             question: "Is the Earth flat?",
             answer: false,
+            real_answer:false
           },
         ],
       },
@@ -94,8 +90,8 @@ export const useQuizStore = create<QuizStore>()(
           id: nanoid(12),
           title: "",
           question: [
-            { question_id: nanoid(12), question: "", answer: true },
-            { question_id: nanoid(12), question: "", answer: false },
+            { question_id: nanoid(12), question: "", answer: false,real_answer:true },
+            { question_id: nanoid(12), question: "", answer: false,real_answer:false },
           ],
         });
       }),
@@ -107,14 +103,17 @@ export const useQuizStore = create<QuizStore>()(
       }),
     // add Question in quiz object
     // this take quiz index to detect position of quiz to add the question/answer
-    addQuestion: (quizIndex) =>
+    addAnswerChoice: (quizIndex) =>
       set((state) => {
         const quiz = state.quizzes[quizIndex];
+        // Max answer choice can add more depend on situation/preference
+        if(quiz.question.length===4)return;
         quiz.questionCounter = quiz.question.length + 1;
         quiz.question.push({
           question_id: nanoid(12),
           question: ``,
           answer: false,
+          real_answer:false
         });
       }),
     // remove question in quiz
@@ -140,7 +139,7 @@ export const useQuizStore = create<QuizStore>()(
     toggleAnswer: (quizIndex, questionIndex) =>
       set((state) => {
         state.quizzes[quizIndex].question.forEach((q, i) => {
-          q.answer = i === questionIndex;
+          q.real_answer = i === questionIndex;
         });
       }),
     // Reset State
@@ -154,12 +153,14 @@ export const useQuizStore = create<QuizStore>()(
               {
                 question_id: nanoid(12),
                 question: "What is 2 + 2?",
-                answer: true,
+                answer: false,
+                real_answer:true
               },
               {
                 question_id: nanoid(12),
                 question: "Is the Earth flat?",
                 answer: false,
+                real_answer:false
               },
             ],
           },

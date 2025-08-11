@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import ConfirmationModal from "@/app/component/confirmationModal";
+import { useRouter } from "next/navigation";
 // type for label categoty
 type CategoryProps = "math" | "biology" | "bussiness" | "tech" | "other";
 interface CategoryData {
@@ -61,14 +62,18 @@ export default function AddQuiz({ user }: any) {
   const [category, setCategory] = useState<CategoryProps>("other");
   const [timer, setTimer] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-const { isAttemptingNavigation, cancelNavigation,bypassNavigation } = useBlockNavigation(true, ["/new-quiz"]);
+    const [navigate, setNavigate] = useState<boolean>(false);
+const { isAttemptingNavigation, cancelNavigation,bypassNavigation,proceedNavigation} = useBlockNavigation(true, ["/new-quiz"]);
+    // useEffect(()=>{
+    //   if(navigate){;console.log('nav fired');setNavigate(false)};
+    // },[navigate])
   const {
     quizzes,
     addQuiz,
     updateTitle,
     updateQuestion,
     toggleAnswer,
-    addQuestion,
+    addAnswerChoice,
     removeQuestion,
     removeQuiz,
     resetQuiz
@@ -80,7 +85,10 @@ const { isAttemptingNavigation, cancelNavigation,bypassNavigation } = useBlockNa
     const hasEmptyQuestion = quizzes.some((quiz) =>
       quiz.question.some((questionI) => questionI.question === "")
     );
-    if (hasEmptyQuestion) {
+    const hasEmptyAnswer= quizzes.some((quiz) =>
+      quiz.question.filter((questionI) => questionI.real_answer).length!==1
+    );
+    if (hasEmptyQuestion||hasEmptyAnswer) {
       setError(true);
       setErrorMsg("There is an empty Answer Choice");
       return;
@@ -112,7 +120,8 @@ const { isAttemptingNavigation, cancelNavigation,bypassNavigation } = useBlockNa
         setSuccess(data.status);
         setSuccessMsg("Quiz Succesfully added");
         resetQuiz()
-      setTimeout(()=>{bypassNavigation(`/dashboard/${user.username}`);},3000)
+        setQuizName("")
+      setTimeout(()=>{bypassNavigation(`/dashboard/${user.username}`);console.log('nav fired')},3000)
       }
     } catch {
       setErrorMsg("Error, Try Again");
@@ -132,10 +141,10 @@ const { isAttemptingNavigation, cancelNavigation,bypassNavigation } = useBlockNa
     }, 4050);
     return () => clearTimeout(timer);
   }, [error, Success]);
-
+  useEffect(()=>console.log(quizzes),[quizzes])
   return (
     <>
-    <ConfirmationModal href={`/dashboard/${user.username}`} isAttemptingNavigation={isAttemptingNavigation} bypassNavigation={bypassNavigation} ConfirmationText="Are you sure want to leave?, the form will be destroyed" cancelNavigation={cancelNavigation}/>
+    <ConfirmationModal href={`/dashboard/${user.username}`} proceedNavigation={proceedNavigation} isAttemptingNavigation={isAttemptingNavigation} bypassNavigation={bypassNavigation} ConfirmationText="Are you sure want to leave?, the form will be destroyed" cancelNavigation={cancelNavigation}/>
       <Modal
         messages={errorMsg || SuccessMsg}
         show={error || Success}
@@ -238,7 +247,7 @@ const { isAttemptingNavigation, cancelNavigation,bypassNavigation } = useBlockNa
         </div>
         {quizzes.map((itemQuiz, indexQuiz) => {
           const selectedAnswerIndex = itemQuiz.question.findIndex(
-            (q) => q.answer
+            (q) => q.real_answer
           );
           return (
             <div key={itemQuiz.id} className="w-full h-fit flex-col">
@@ -298,7 +307,7 @@ const { isAttemptingNavigation, cancelNavigation,bypassNavigation } = useBlockNa
               </RadioGroup>
               <button
                 className="cursor-pointer border border-green-600 mt-3"
-                onClick={() => addQuestion(indexQuiz)}
+                onClick={() => addAnswerChoice(indexQuiz)}
               >
                 Add Answer Choice
               </button>

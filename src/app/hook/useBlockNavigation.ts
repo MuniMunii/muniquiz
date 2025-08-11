@@ -1,15 +1,12 @@
 // Source
 // https://medium.com/@deepak.v2701/next-js-prevent-navigation-handle-back-button-page-reload-with-userouter-fbead4d69051
-// still has cons it need to add another router.push() from next/navigate 
+// still has cons it need to add another router.push() from next/navigate
 // refactor and Adding function bypassNavigation so we dont need router.push
-/* 
-        <Button variant={"destructive"} onClick={{cancelNavigation;router.push('')}}>Cancel</Button>
-*/
 import { useEffect, useState, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 const useBlockNavigation = (
   shouldBlock: boolean,
-  allowedRoutes: string[] = [],
+  allowedRoutes: string[] = []
 ) => {
   const router = useRouter();
   const pathname = usePathname();
@@ -17,16 +14,25 @@ const useBlockNavigation = (
   const [nextRoute, setNextRoute] = useState<string | null>(null);
   const originalPushRef = useRef(router.push); // Store original router.push
   const lastLocationRef = useRef<string | null>(null); // Store last visited route    // ✅ Check if navigation is allowed
+  const [isBypassing, setIsBypassing] = useState<boolean>(false);
+  const [bypassUrl, setBypassUrl] = useState<string>("");
+  // byPass navigation for setTimeout navigation
+  useEffect(()=>{
+    if(isBypassing){
+      originalPushRef.current(bypassUrl)
+    }
+  },[bypassUrl,isBypassing])
+  // cleanup when changing pathname
+  useEffect(()=>{
+    setIsBypassing(false)
+    setBypassUrl('')
+  },[pathname])
   const canNavigate = (url: string) => {
     const { pathname } = new URL(url, window.location.origin);
     return allowedRoutes.some(
       (route) => pathname === route || pathname.startsWith(route + "/")
     );
   };
-  // useEffect(()=>{
-  //   if(isAttemptingNavigation)document.body.style.overflow='hidden';
-  //   else{document.body.style.overflow='auto'}
-  // },[isAttemptingNavigation])
   useEffect(() => {
     const handleNavigation = (url: string) => {
       if (!shouldBlock || canNavigate(url) || url === pathname) {
@@ -36,7 +42,7 @@ const useBlockNavigation = (
       setIsAttemptingNavigation(true);
       setNextRoute(url);
     };
-    router.push = ((url) => {
+    router.push = ((url, _options) => {
       handleNavigation(url);
     }) as typeof router.push;
     return () => {
@@ -78,14 +84,21 @@ const useBlockNavigation = (
       originalPushRef.current(nextRoute); // Navigate to previous or next route
       setNextRoute(null);
     }
-  };  
+  };
   const cancelNavigation = () => {
     setIsAttemptingNavigation(false);
     setNextRoute(null);
   };
   const bypassNavigation = (url: string) => {
-    originalPushRef.current(url);
+    setIsBypassing(true);
+    setBypassUrl(url);
   };
-  return { isAttemptingNavigation, proceedNavigation, cancelNavigation,bypassNavigation,canNavigate };
+
+  return {
+    bypassNavigation,
+    isAttemptingNavigation,
+    proceedNavigation,
+    cancelNavigation,
+  };
 };
 export default useBlockNavigation;

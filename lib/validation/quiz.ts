@@ -3,7 +3,8 @@ export const CategoryEnum=z.enum(['math','biology','bussiness','tech','other'])
 export const AnswerChoiceScheme=z.object({
     question_id:z.string(),
     question:z.string().trim().min(1, 'Answer choice title cannot be empty'),
-    answer:z.boolean()
+    answer:z.boolean(),
+    real_answer:z.boolean()
 })
 export const QuestionScheme=z.object({
     id:z.string(),

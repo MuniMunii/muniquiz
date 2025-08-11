@@ -6,6 +6,7 @@ import { OwnerQuizType } from "../../../../../lib/validation/quiz";
 import SlideQuiz from "./component/slide";
 import useBlockNavigation from "@/app/hook/useBlockNavigation";
 import ConfirmationModal from "@/app/component/confirmationModal";
+import SessionQuiz from "./HOC/SessionQuizHOC";
 interface MutationProps{
     message:string;
     data:OwnerQuizType
@@ -14,7 +15,7 @@ export default function QuestionPage({params}:{params:Promise<{slug:string,numbe
     const [Quiz,setQuiz]=useState<OwnerQuizType|undefined>()
     // Number params still has question function to use
 const {number,slug}=React.use(params)
-    const { isAttemptingNavigation, cancelNavigation,bypassNavigation } = useBlockNavigation(true, [`/quiz/${slug}`]);
+    const { isAttemptingNavigation, cancelNavigation,bypassNavigation,proceedNavigation } = useBlockNavigation(true, [`/quiz/${slug}`]);
 const enterID=slug
 const {trigger,error,isMutating}=useSWRMutation<MutationProps,Error,string,{enterID:string}>('get-quizparam',sendRequestQuiz)
 useEffect(()=>{console.log(number,slug)},[params])
@@ -30,7 +31,8 @@ useEffect(() => {
 // Main Component
     return (
         <>
-    <ConfirmationModal href={`/quiz/join`} isAttemptingNavigation={isAttemptingNavigation} bypassNavigation={bypassNavigation} ConfirmationText="Are you sure want to leave?, this quiz will be destroyed" cancelNavigation={cancelNavigation}/>
+        {/* <SessionQuiz username={} enterID={slug}> */}
+    <ConfirmationModal href={`/quiz/join`}  proceedNavigation={proceedNavigation} isAttemptingNavigation={isAttemptingNavigation} bypassNavigation={bypassNavigation} ConfirmationText="Are you sure want to leave?, this quiz will be destroyed" cancelNavigation={cancelNavigation}/>
         <div className="text-white w-full h-full min-h-screen flex flex-col bg-purple-500">
             <div className="w-full h-fit bg-slate-800 flex justify-between px-6 py-4 items-center">
                 <p>{Quiz?.titleQuiz}</p>
@@ -38,6 +40,7 @@ useEffect(() => {
             </div>
             <SlideQuiz key={'slideQuiz'} question={Quiz?.Quiz} isLoading={isMutating}/>
         </div>
+        {/* </SessionQuiz> */}
         </>
     )
 }
