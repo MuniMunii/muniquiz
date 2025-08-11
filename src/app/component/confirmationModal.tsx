@@ -6,7 +6,6 @@ interface ConfirmationModalProps{
     bypassNavigation:(url:string)=>void;
     cancelNavigation:()=>void;
     proceedNavigation:()=>void;
-    // canNavigate:(href:string)=>void;
     ConfirmationText:string;
     isAttemptingNavigation:boolean;
     href:string
