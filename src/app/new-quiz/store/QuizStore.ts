@@ -35,7 +35,7 @@ interface QuizStore {
    * @param quizIndex - The index of the quiz.
    * @param questionIndex - The index of the question to remove.
    */
-  removeQuestion: (quizIndex: number, questionIndex: number) => void;
+  removeAnswerChoice: (quizIndex: number, questionIndex: number) => void;
   /**
    * Update the title of a quiz.
    * @param quizIndex - The index of the quiz.
@@ -118,7 +118,7 @@ export const useQuizStore = create<QuizStore>()(
       }),
     // remove question in quiz
     // this take quiz index and question index as parameter to detect the value of quiz and delete the value
-    removeQuestion: (quizIndex, questionIndex) =>
+    removeAnswerChoice: (quizIndex, questionIndex) =>
       set((state) => {
         state.quizzes[quizIndex].question.splice(questionIndex, 1);
       }),

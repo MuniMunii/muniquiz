@@ -74,7 +74,7 @@ const { isAttemptingNavigation, cancelNavigation,bypassNavigation,proceedNavigat
     updateQuestion,
     toggleAnswer,
     addAnswerChoice,
-    removeQuestion,
+    removeAnswerChoice,
     removeQuiz,
     resetQuiz
   } = useQuizStore();
@@ -296,7 +296,7 @@ const { isAttemptingNavigation, cancelNavigation,bypassNavigation,proceedNavigat
                         className="border-gray-300 focus:border-blue-400 border pl-2 p-3 rounded-xl outline-none"
                       />
                       <button
-                        onClick={() => removeQuestion(indexQuiz, indexQuestion)}
+                        onClick={() => removeAnswerChoice(indexQuiz, indexQuestion)}
                         className="bg-red-500 size-8"
                       >
                         X

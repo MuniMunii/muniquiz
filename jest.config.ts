@@ -22,7 +22,7 @@ const config: Config = {
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/src/$1",
   },
-  // This is the key part - transform ES modules from node_modules
+  // Ignore module
 transformIgnorePatterns: [
   'node_modules/(?!(jose|openid-client|oauth4webapi|@auth|next-auth|bson|mongodb|@mongodb-js|whatwg-url|tr46|webidl-conversions|ip-address|jsbi|sparse-bitfield|@fortawesome|react-icons)/)',
 ],
