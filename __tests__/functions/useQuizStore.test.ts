@@ -106,4 +106,15 @@ describe("UseQuiz Store Zustand", () => {
         const after=useQuizStore.getState().quizzes
         expect(after[1].question[1].real_answer).toBe(before[1].question[1].real_answer!==after[1].question[1].real_answer)
   })
+  it("Answer Choice Cannot be more than 4",()=>{
+    const {addAnswerChoice,addQuiz}=useQuizStore.getState()
+    addQuiz()
+    addAnswerChoice(1)
+    addAnswerChoice(1)
+    addAnswerChoice(1)
+    addAnswerChoice(1)
+    addAnswerChoice(1)
+    const after=useQuizStore.getState().quizzes
+    expect(after[1].question.length).not.toBeGreaterThan(4)
+  })
 });

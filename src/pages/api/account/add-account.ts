@@ -13,7 +13,7 @@ export default async function handler(req:NextApiRequest,res:NextApiResponse){
     }
     const parseResult=RegisterUserScheme.safeParse(req.body)
     if(!parseResult.success){
-        return res.status(400).json({error:"Username, email, and password are required./Invalid",status:true});
+        return res.status(400).json({error:"Username, email, and password are required/Invalid",status:true});
     }
     const {username,email,password}=parseResult.data;
     try {

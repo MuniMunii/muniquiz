@@ -21,11 +21,15 @@ const config: Config = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/src/$1",
+    "^lib/(.*)$": "<rootDir>/lib/$1",
   },
   // Ignore module
 transformIgnorePatterns: [
   'node_modules/(?!(jose|openid-client|oauth4webapi|@auth|next-auth|bson|mongodb|@mongodb-js|whatwg-url|tr46|webidl-conversions|ip-address|jsbi|sparse-bitfield|@fortawesome|react-icons)/)',
 ],
+testPathIgnorePatterns: [
+    "<rootDir>/e2e-tests/",
+  ],
 };
 
 export default createJestConfig(config);

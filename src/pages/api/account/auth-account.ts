@@ -2,6 +2,8 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 import clientPromise from "../../../../lib/mongoClient";
 import bcrypt from 'bcryptjs'
 import {z}from 'zod'
+import { getServerSession } from "next-auth";
+import { authOptions } from "lib/authOption";
 const authParsedScheme=z.object({
     username:z.string().min(1),
     password:z.string().min(1)
@@ -15,6 +17,10 @@ export default async function handler(req:VercelRequest,res:VercelResponse){
         return res.status(400).json({messages:'Invalid form format',status:true})
     }
     const {username,password}=parsedAuth.data
+    const session=await getServerSession(req,res,authOptions)
+    if(session){
+        return res.status(403).json({messages:'Already authentication, Logout first if want change account',status:true})
+    }
     try{
         const client=await clientPromise
         const db=client.db('muniquiz')

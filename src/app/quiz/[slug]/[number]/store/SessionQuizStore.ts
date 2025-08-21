@@ -5,7 +5,7 @@ interface SessionQuizProps{
     answerState:ProgressQuizType[]
     addAnswer:(newAnswer:ProgressQuizType)=>void
 }
-export const SessionQuizStore=create<SessionQuizProps>()(
+export const useSessionQuizStore=create<SessionQuizProps>()(
     immer((set)=>({
         answerState:[],
         addAnswer(newAnswer) {

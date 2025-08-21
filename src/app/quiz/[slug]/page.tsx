@@ -26,18 +26,18 @@ export default function QuizPage({ params }: { params: Promise<{ slug: string }>
     }
     console.log(session);
   }, [session]);
-  const {trigger,isMutating}=useSWRMutation<OwnerQuizType,Error,string,{enterID:string}>('get-enterid',sendRequestQuiz)
+  const {trigger,isMutating}=useSWRMutation<OwnerQuizType,Error,string,{enterID:string,username:string}>('get-enterid',sendRequestQuiz)
   useEffect(() => {
   if (enterID) {
     console.log(enterID)
-    trigger({ enterID }); 
+    trigger({ enterID,username }); 
   }
 }, [enterID, trigger]);
   const handleClick=async()=>{
     try{
       console.log('test handle')
         console.log('test handle if')
-              const result=await trigger({enterID:enterID})
+              const result=await trigger({enterID:enterID,username:username})
               console.log(result)
               console.log(enterID)
             router.push(
@@ -58,7 +58,7 @@ export default function QuizPage({ params }: { params: Promise<{ slug: string }>
             className="border border-gray-400 text-neutral-700"
           />
           <Button
-          disabled={isMutating}
+          disabled={isMutating||!username.trim()}
             type="button"
             onClick={() => {
               handleClick()
