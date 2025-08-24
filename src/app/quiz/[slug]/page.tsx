@@ -41,7 +41,7 @@ export default function QuizPage({ params }: { params: Promise<{ slug: string }>
               console.log(result)
               console.log(enterID)
             router.push(
-                  `/quiz/${result.enterID}/1?username=${username}`
+                  `/quiz/${result.enterID}/${username}/1`
                 );
               
     }catch(err){throw new Error(`fetching error:${err}`)}

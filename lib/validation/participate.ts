@@ -20,6 +20,6 @@ export const ParticipateScheme = z.object({
   quiz_category: CategoryEnum,
   progress: z.array(ProgressQuizScheme),
   expired_at: z.date()
-});
+}); 
 export type ProgressQuizType=z.infer<typeof ProgressQuizScheme>
 export type ParticipateType=z.infer<typeof ParticipateScheme>
