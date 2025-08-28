@@ -19,7 +19,9 @@ export const ParticipateScheme = z.object({
   enterID:z.string().max(10),
   quiz_category: CategoryEnum,
   progress: z.array(ProgressQuizScheme),
-  expired_at: z.date()
+  progressIndex:z.number(),
+  expired_at: z.date(),
+  timer:z.date().optional(),
 }); 
 export type ProgressQuizType=z.infer<typeof ProgressQuizScheme>
 export type ParticipateType=z.infer<typeof ParticipateScheme>

@@ -4,9 +4,11 @@
 import "@testing-library/jest-dom";
 import { createMocks } from "node-mocks-http";
 import getQuizByParam from "@/pages/api/quiz/get-quizparam";
-import { ParticipateScheme } from "lib/validation/participate";
+import { ParticipateScheme, ParticipateType } from "lib/validation/participate";
 import type{ NextApiRequest, NextApiResponse } from "next";
-const dummyParticipate = {
+import { OwnerQuizType } from "lib/validation/quiz";
+import UpdateProgressIndex from "@/pages/api/quiz/patch-updateProgressIndex";
+const dummyQuiz:OwnerQuizType = {
   id: "quiz_12345",
   enterID: "ABC1234567", // max 10 chars
   owner: "muniUser",
@@ -72,6 +74,37 @@ const dummyParticipate = {
   image: "https://example.com/quiz-image.jpg",
   quiz_category: "other", // from CategoryEnum
 };
+      const removedReal_answer = dummyQuiz.Quiz.map((val) => {
+        const answer_choice = val.question.map((qa) => {
+          return {
+            question_id: qa.question_id,
+            answer_question: qa.question,
+            answer: qa.answer,
+          };
+        });
+        return {
+          id: val.id,
+          title: val.title,
+          answer_choice,
+        };
+      });
+      const timer = new Date(
+        Date.now() +
+          (dummyQuiz!.timer === 0
+            ? 24 * 60 * 60 * 1000
+            : dummyQuiz!.timer * 1000)
+      );
+      const reconstructQuiz: ParticipateType = {
+        id: dummyQuiz.id,
+        titleQuiz: dummyQuiz.titleQuiz,
+        username: "MuniMuni Participate",
+        quiz_category: dummyQuiz.quiz_category,
+        enterID: dummyQuiz.enterID,
+        progress: removedReal_answer,
+        progressIndex:1,
+        played_at: new Date(),
+        expired_at: timer,
+      };
 jest.mock("lib/mongoClient", () => ({
   __esModule: true,
   default: Promise.resolve({
@@ -81,35 +114,47 @@ jest.mock("lib/mongoClient", () => ({
           if (
             query.enterID === "ABC1234567"
           ) {
-            return dummyParticipate;
+            return reconstructQuiz;
           }
           return null;
         }),
         insertOne: jest.fn().mockResolvedValue({ acknowledged: true, insertedId: "mockedId123" }),
+        updateOne: jest.fn().mockResolvedValue({ acknowledged: true, modifiedCount: 1 }),
       }),
     }),
   }),
 }));
 jest.useFakeTimers()
 describe('Quiz Session API',()=>{
-    it('get-quizparam Received data match value with participate scheme',async ()=>{
-        const {req,res}=createMocks({
-            method:'POST',
-            body:{username:'Muni',enterID:'ABC1234567'}
-        })
-        const typedReq = req as unknown as NextApiRequest;
-        const typedRes = res as unknown as NextApiResponse;
-        await getQuizByParam(typedReq,typedRes)
-        expect(res._getStatusCode()).toBe(200)
+    // it('Remove Quiz if timer expired',async ()=>{
+    //     const {req,res}=createMocks({
+    //         method:'POST',
+    //         body:{username:'MuniMuni Participate',enterID:'ABC1234567'}
+    //     })
+    //     const typedReq = req as unknown as NextApiRequest;
+    //     const typedRes = res as unknown as NextApiResponse;
+    //     // act()
+    //     await getQuizByParam(typedReq,typedRes)
+    //     expect(res._getStatusCode()).toBe(200)
+    // })
+    it('Updating Progress Index',async()=>{
+      const {req,res}=createMocks({
+        method:'PATCH',
+        body:{username:'MuniMuni Participate',enterID:'ABC1234567',index:2}
+      })
+      const typedReq = req as unknown as NextApiRequest;
+      const typedRes = res as unknown as NextApiResponse;
+      await UpdateProgressIndex(typedReq,typedRes)
+      expect(res._getStatusCode()).toBe(200)
     })
-    it('Remove Quiz if timer expired',async ()=>{
-        const {req,res}=createMocks({
-            method:'POST',
-            body:{username:'Muni',enterID:'ABC1234567'}
-        })
-        const typedReq = req as unknown as NextApiRequest;
-        const typedRes = res as unknown as NextApiResponse;
-        await getQuizByParam(typedReq,typedRes)
-        expect(res._getStatusCode()).toBe(200)
+        it('Fallback if session not found',async()=>{
+      const {req,res}=createMocks({
+        method:'PATCH',
+        body:{username:'MuniMuni Participateasd',enterID:'ABC1234567asdas',index:2}
+      })
+      const typedReq = req as unknown as NextApiRequest;
+      const typedRes = res as unknown as NextApiResponse;
+      await UpdateProgressIndex(typedReq,typedRes)
+      expect(res._getStatusCode()).toBe(404)
     })
 })

@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import clientPromise from "../../../../lib/mongoClient";
 import { OwnerQuizScheme } from "lib/validation/quiz";
-import { ParticipateScheme } from "lib/validation/participate";
+import { ParticipateScheme, ParticipateType } from "lib/validation/participate";
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -14,6 +14,8 @@ export default async function handler(
     const findOneQuiz = await DB.collection("quiz").findOne({
       enterID: enterID,
     });
+    const isThisUserPlayedAlready=await DB.collection('participate').findOne({username:username,enterID:enterID})
+    if(isThisUserPlayedAlready)return res.status(406).json({message:'User Already Played'})
     if (!findOneQuiz) {
       return res.status(404).json({ message: "Quiz Not Found" });
     }
@@ -46,13 +48,14 @@ export default async function handler(
           ? 24 * 60 * 60 * 1000
           : parsedQuiz.data!.timer * 1000)
     );
-    const reconstructQuiz = {
+    const reconstructQuiz:ParticipateType = {
       id: parsedQuiz.data?.id,
       titleQuiz: parsedQuiz.data?.titleQuiz,
       username: username,
       quiz_category: parsedQuiz.data?.quiz_category,
       enterID: parsedQuiz.data?.enterID,
       progress: removedReal_answer,
+      progressIndex:1,
       played_at: new Date(),
       expired_at: timer,
     };

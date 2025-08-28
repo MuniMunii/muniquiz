@@ -27,16 +27,19 @@ const memoizedQuiz: QuizType = useMemo(() => {
     isError: error as ErrorProps
   };
 }
-export async function sendRequestQuiz(url:string,{arg}:{arg:{enterID:string}}){
- const response = await fetch(`/api/quiz/${url}`, {
-    method: 'POST',
+export async function sendRequestQuiz<T extends Record<string, any>>(
+  url: string,
+  { arg,method='POST' }: { arg: T,method?:'POST'|'PATCH'|'DELETE' }
+): Promise<any> {
+  const response = await fetch(`/api/quiz/${url}`, {
+    method: method,
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify(arg),
   });
-  if(!response.ok){
-    throw new Error('Failed to fetch Quiz')
+  if (!response.ok) {
+    throw new Error("Failed to fetch Quiz");
   }
-  return response.json()
+  return response.json();
 }

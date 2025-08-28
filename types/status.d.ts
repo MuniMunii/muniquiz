@@ -15,3 +15,7 @@ interface ErrorProps{
     message:string,
     error:boolean
 }
+interface MutationProps{
+    message:string;
+    data:OwnerQuizType
+}
